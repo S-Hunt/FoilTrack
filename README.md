@@ -4,13 +4,6 @@ This suite of Matlab scripts has been created for analysing displacement of feat
 
 Documentation, such as it is, for the scripts are in the File ImageAnalysisSuiteDocumentation.docx. 
 
-The suite of scripts has been tested under:
-
-	Ubuntu 14.04 / Matlab 2014a
-	
-	MacOS 10.13 (High Siera) / MatLab 2017a
-	
-
 *N.B.:*
 
 1. This is reseach software not written for public consumption. The many bugs are all mine. If you find any please let me know. 
@@ -20,6 +13,8 @@ The suite of scripts has been tested under:
 3. The documentation is far from complete. It was written as aide-mémoire for when I use the scripts. 
 
 
+The suite of scripts has been tested under:
 
-Simon Hunt, University of Manchester.
-November 2020.
+	Ubuntu 14.04 / Matlab 2014a
+	
+	MacOS 10.13 (High Siera) / MatLab 2017a
