@@ -1,0 +1,95 @@
+Routines for dealing with ESRF Data and Header Files .edf / .ehf.
+Petr Mikulik, Masaryk University, Brno
+=================================================================
+
+This directory contains a series of EDF routines: edf file writing,
+reading, and various header operations.
+
+Advantages:
+  * Compatible to both Octave and Matlab.
+  * Reads properly EDF files according to the ESRF EDF/EHF Data Structure
+    Documentation; most notably:
+    	- header is a multiple of 512 B
+	- regular expression for a header line is
+	  \nkey [ ]*= [ ]*value[ ]*;\n
+  * Includes documentation, usage and example.
+  * Reuses given header when writing a new file.
+  * Literate programming style :-)
+
+
+Installation
+============
+
+1. Copy contents of the zip file into a directory called "pmedf"
+2. Move this directory somewhere, e.g.
+	$HOME/usr/lib/octave/pmedf
+	$HOME/matlab/pmedf
+	C:\Matlab7\toolbox\local\pmedf
+	/opt/octave-3.2.4/share/octave/3.2.4/site/m
+3. For Octave, do:
+   - In order to speed up reading of edf files in Octave, type
+	make
+      to recompile one .oct "plugin" file.
+    - Edit file $HOME/.octaverc and put there
+	addpath('~/usr/lib/octave/pmedf');
+      for single-user installation or for global installation file
+      /opt/octave/octave-3.2.4/share/octave/site/m/startup/octaverc
+      and put there
+	addpath('/opt/octave-3.2.4/share/octave/3.2.4/site/m/pmedf')
+4. For Matlab, do:
+    - edit file startup.m, e.g.
+	$HOME/matlab/startup.m
+	C:\Matlab7\toolbox\local\startup.m
+    - and add there a corresponding line, such as
+	addpath([getenv('HOME'), '/usr/lib/octave/pmedf'], '-begin');
+	addpath([matlabroot, '/local/pmedf'], '-begin'); % on unixes
+	addpath([matlabroot, '\local\pmedf'], '-begin'); % on Windows
+
+
+Examples of using these EDF routines:
+=====================================
+
+Example 1
+---------
+
+snap1 = pmedfread('gaas_0001.edf');
+	or
+[head1, snap1] = pmedf_read('gaas_0001.edf');
+
+colormap(ocean);
+imagesc(rot90(snap1)); axis xy; colorbar
+
+[head1avg, snap1avg] = pmedf_average4 ( head1, snap1 );
+
+pmedf_write('gaas_0001_avg.edf', head1avg, snap1avg);
+
+
+Example 2
+---------
+
+n = 55;
+colormap(ocean);
+
+h = pmedf_emptyHeader;
+h = pmedf_putInHeader(h, 'PSize_1', 40.0); % pixel size
+h = pmedf_putInHeader(h, 'PSize_2', 40.0);
+h = pmedf_putInHeader(h, 'Title', 'My Demo Data');
+
+a = log(hilb(n));
+a(1:10,n-10:n) = -1.0;
+imagesc(rot90(a)); axis xy; colorbar
+
+h = pmedf_putInHeader(h, 'DataType', 'FloatValue');
+h_written = pmedf_write('new_float.edf', h, a)
+
+disp('Press enter...'); pause
+
+a = 1 ./ hilb(n);
+a(1:10,n-10:n) = 88;
+imagesc(rot90(a)); axis xy; colorbar
+
+h = pmedf_putInHeader(h, 'DataType', 'UnsignedShort');
+h_written = pmedf_write('new_ushort.edf', h, a)
+
+
+End.

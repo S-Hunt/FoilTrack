@@ -1,0 +1,45 @@
+Results from playing with matrix dimensions and imaging it
+by means of various drawers -- and you want to get always
+the same image.
+
+Petr Mikulik
+Current version:   1. 6. 2009 for Octave 3 and Matlab
+Original version: 25. 7. 2002 for Octave 2
+===========================================================
+
+I use
+	[h, a] = pmedf_read('image.edf');
+
+Then imaging from Octave:
+
+	imagesc(rot90(a)); axis xy; colorbar
+
+	pmimage(rot90(a)); axis xy; colorbar
+
+	b=fliplr(a); imagesc(b'); axis xy; colorbar % b is cartesian
+
+	savegpbin(1:rows(a), 1:columns(a), fliplr(a), 'a.gpbin');
+	or
+	savegpbin(1:rows(b), 1:columns(b), fliplr(b), 'a.gpbin');
+		gnuplot> set autoscale fix; plot 'a.gpbin' binary with image
+
+is exactly that from
+	zimg
+	onze
+	ImageJ
+and all give the same image on the screen.
+
+Further, accessing fields in Octave:
+	* x are rows, y are columns
+	* x goes from left to right
+	* y goes from top to down
+	* a(x1:x2, y1:y2) selects what you expect, i.e. the frame as indicated
+	  by ImageJ, Irfan, PMview
+
+These x and y directions are those shown in ImageJ and Irfan.
+
+Thus we are compatible also to my adAnaRock, adGetRock, etc. scripts.
+
+Notes: Irfan and ImageJ count pixels from 0, PMview from 1.
+And Octave from 1 too.
+adAnaRock, adGetRock et al from 0.

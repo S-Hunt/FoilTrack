@@ -1,0 +1,152 @@
+11.8.2010
+
+	* matbinning.m pmedf_demo.zip: Matlab compatibility fixes.
+
+10.8.2010
+
+	* pmedf_findMnePos.m: Matlab does not have index, use strfind instead.
+
+	* pmedf_findPos.m: Use str2double instead of sscanf.
+
+	* pmedf_average4list.m pmedf_diff_series.m pmedf_FileList_rotate.m:
+	Matlab compatibility fixes.
+
+31.5.2010
+
+	* pmedf_read.m pmedf_write.m pmedf_diff_series.m: Report an error under
+	Matlab if writing .gz/.bz2 data. That's because Matlab does not have the
+	popen() function.
+
+	* pmedf_average4list.m pmedf_average4list.m pmedf_average4series.m
+	pmedf_diff_series.m pmedf_FileList_rotate.m pmedf_putInHeader.m:
+	Replace rindex() by findstr(end) because rindex is available in Octave
+	but not in Matlab.
+
+17.6.2009
+
+	* README README-XYZ: Updated examples.
+
+	* pmedf_readC.cpp: Fix for Octave 3.2.
+
+1.4.2009
+
+	* wildcard2filelist.m: Matlab compatibility of '\n' vs "\n" (Octave).
+
+28.1.2009
+
+	* pmedf_readC.cpp: Fix for long headers.
+
+29.10.2008
+
+	* pmedf_findInHeader.m: Fix for not short-circuit |.
+
+12.10.2008
+
+	* pmedf_findInHeader.m: Catch file header with CRLF.
+
+	* pmedf_removeInHeader.m pmedf_average4: Replace a==[] by isempty(a).
+
+11. 5. 2008
+
+	* pmedf_read.m: Minor clean-up.
+
+	* pmedf_readC.cpp: Fixed memory leaks. Long datatypes have size of 4 B.
+
+	* pmedf_findMnePos.m: Requesting "omega" motor position in a sequence
+	like "... omegabla ... omega ...", position of the "omegabla" was
+	returned instead. Fixed.
+
+5. 7. 2006
+
+	* pmedf_readC.cpp: Fixed s.data() => s.c_str() for std::string.
+
+28. 6. 2006
+
+	* pmedf_read.m: Use pmedf_readC if available.
+
+	* pmedf_readC.cpp Makefile: New files for faster reading in Octave.
+
+5. 6. 2006
+
+	* pmedf_write.m: Support for writing signed datatypes.
+
+18. 2. 2005
+
+	* edfs2vtk.m: New options opts.datatype, opts.zrange, opts.zspan.
+
+17. 2. 2005
+
+	* pmedf_read.m: Don't read the data if only the header output argument
+	requested.
+
+15. 2. 2005
+
+	Put in the "edfs2vtk package".
+
+	* edfs2vtk.m: Convert a series of edf files into a vtk volume file.
+
+	* matbinning.m: Bin a vector/matrix (like binning of pixel detector).
+
+	* wildcard2filelist.m: Converts a series of files (given via a
+	wildcard) into a list of files, i.e. '*.txt' -> f{1}, f{2}, f{3} ...
+
+	* demo.zip: Added demo for edf2vtk.
+
+15. 2. 2005
+
+	* pmedf_read.m: Reread file if (the first) reading of data failed.
+
+13. 2. 2005
+
+	* pmedf_write.m: Added writing of .gz and .bz2 edf files.
+
+	* pmedf_read.m: Added reading of .gz and .bz2 edf files.
+
+	* pmedf_read.m: Protection against files with a broken header.
+
+	* pmedf_findMnePos.m: New routine.
+
+	* pmedf_findPos.m: New routine.
+
+23. 9. 2004
+
+	* pmedf_putInHeader.m: Use isempty() where necessary.
+
+	* pmedf_findInHeader.m: Use isempty() where necessary.
+
+	* pmedf_read.m: Avoid a warning of an implicit conversion from matrix to
+	string for fscanf(fid, '%c', 512) by Octave 2.1.55 and later.
+
+13. 6. 2004
+
+	* README_CartesianXYZ.m: New file.
+
+7. 11. 2003
+
+	* pmedf_FileList_rotate.m: New file.
+
+2. 6. 2003
+
+	* pmedf_write: Added support for signed datatypes.
+ 
+	* pmedf_writeWithRasterAxes.m: New routine.
+
+4. 5. 2003
+ 
+	* pmedf_average4list.m: Use a temporary files for file list obtained by
+	'ls' command -- avoid overfull system buffer.
+
+10. 11. 2002
+
+	* README: Added examples of edf file writing and its header filling.
+16. 9. 2002
+
+	* test_write.m: New file: Demo of writing an edf file.
+
+27. 8. 2002
+
+	* pmedfread.m: New file: It is a simple "front-end" for pmedf_read().
+
+2. 5. 2002
+
+	* Original version.
