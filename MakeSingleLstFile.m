@@ -241,15 +241,16 @@ for i = 1:num_images
     catch
         im_info = [];
     end
-    if ts == 1 %get the times of the images from the logfile.        
-        loc = find(ismember(ImNames,  allimages(i).name));
-        if isempty(loc)
-            error_str = ['No time stamp has been found for ',allimages(i).name,' in the logfile.'];
-            error(error_str);
-        end
-        im_times(i) = ImTimes(loc);       
+%     if ts == 1 %get the times of the images from the logfile.        
+%         loc = find(ismember(ImNames,  allimages(i).name));
+%         if isempty(loc)
+%             error_str = ['No time stamp has been found for ',allimages(i).name,' in the logfile.'];
+%             error(error_str);
+%         end
+%         im_times(i) = ImTimes(loc);       
 
-    elseif isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) == 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
+%else
+    if isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) == 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
         im_times(i) = im_info.UnknownTags.Value;
     elseif isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) >= 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
         im_times(i) = im_info.UnknownTags(1).Value;
@@ -265,7 +266,22 @@ for i = 1:num_images
 end
 
 % replace the time stamps from the save time with those in the replacement timestamp file (generally a log file).
-if ts == 2 
+if ts == 1
+    
+    if plot_on == 1
+        im_t_old = im_times;
+    end
+    
+    for i = 1:num_images
+        loc = find(ismember(ImNames,  allimages(i).name));
+        if isempty(loc)
+            error_str = ['No time stamp has been found for ',allimages(i).name,' in the logfile.'];
+            error(error_str);
+        end
+        im_times(i) = ImTimes(loc);
+    end
+    
+elseif ts == 2 
     
     if numel(ImTimes) < num_images
         error('There are not enough time stamps in the replcement file for this process to succeed')
@@ -478,12 +494,12 @@ if plot_on == 1
     clf
     hold on
     leg_str = [];
-    if ts == 2
-        plot(im_t_old, 1:length(im_t_old), 'g.') %plot times images were saved at
+    if ts == 2 | ts==1
+        plot(im_t_old, 1:length(im_t_old), 'go') %plot times images were saved at
         leg_str = [leg_str, {'Image Save times'}];
     end
     if ts ~= 0
-        plot(ImTimes, 1:length(ImTimes), 'k.-') %plot times read from Log File.
+        plot(ImTimes, 1:length(ImTimes), 'kx-') %plot times read from Log File.
         leg_str = [leg_str, {'Log File times'}];
     end
     plot(im_times, 1:length(im_times), '.-r') % plot time stamps to save
@@ -494,7 +510,7 @@ if plot_on == 1
     legend(leg_str, 'Location', 'SouthEast')
     hold off
     
-    if ts~=0
+    if ts==2
         figure(2)
         clf
         hold on
@@ -503,13 +519,14 @@ if plot_on == 1
         ylabel('Dropped frames')
         title('Dropped Frames')
         hold off
-        
+    end
+    if ts~=0        
         figure(3)
         clf
         hold on
         plot(1:length(im_times), im_times-im_t_old, 'b.-')
         xlabel('Image number in sequence')
-        ylabel('Time difference between same time and log file time')
+        ylabel('Time difference between save time and log file time')
         title('Delta T')
         hold off
     end

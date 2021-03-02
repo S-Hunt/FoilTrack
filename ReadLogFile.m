@@ -28,6 +28,29 @@ function [TimeStamp names] = ReadLogFile(fname)
 %check there is only one file denoted by 'fname'
 f = dir(fname);
 
+%discard hidden files
+if numel(f) > 1 
+    %copied from https://stackoverflow.com/questions/5234341/how-to-filter-hidden-files-after-calling-matlabs-dir-function
+    % in February 2021
+    %# remove all folders
+    isBadFile = cat(1,f.isdir); %# all directories are bad
+    
+    %# loop to identify hidden files
+    for iFile = find(~isBadFile)' %'# loop only non-dirs
+        %# on OSX, hidden files start with a dot
+        isBadFile(iFile) = strcmp(f(iFile).name(1),'.');
+        if ~isBadFile(iFile) && ispc
+            %# check for hidden Windows files - only works on Windows
+            [~,stats] = fileattrib(fullfile(folder,f(iFile).name));
+            if stats.hidden
+                isBadFile(iFile) = true;
+            end
+        end
+    end
+    %# remove bad files
+    f(isBadFile) = [];
+end
+
 if numel(f) > 1
     error('there is more than one file denoted by the logfile string')
 elseif isempty(f)
