@@ -1,9 +1,4 @@
-
 function choice = SelectBoxes_MultiButton(title, message, options)
-
-% title = 'Hello';
-% message = 'Does this bloody work?';
-% options = {'Yes', 'No', 'Yeah right!','My Arse it does'};
 
 %define some lengths
 box_width = 200;
@@ -52,7 +47,7 @@ for x = 1:length(options)
 end
     uicontrol(button(1))
                      
-%wrtie message to figure. 
+%write message to figure. 
 %this is mostly copied from the help for wraptext.m
 
 % Create it in Units of Pixels, 100 wide, 10 high
@@ -84,13 +79,14 @@ gif_pos(4) = mespos1(2) +  mespos1(4) +1.25;
 set(d,'Position',gif_pos)
     
 
-%position the figure nively on the screen.
+%position the figure nicely on the screen.
 set(d,'Units','pixels')
-% FigPos    = ;
-set(d,'Position',getnicedialoglocation(get(d,'Position'), get(d,'Units')))
-% FigPos    = get(d,'Position');
-% FigPos    = getnicedialoglocation(FigPos, get(d,'Units'));
-% set(d,'Position',FigPos)
+container_size = get(0,'ScreenSize');
+figure_size = get(d,'Position');
+figure_size(1) = container_size(1)  + 1/2*(container_size(3) - figure_size(3));
+figure_size(2) = container_size(2)  + 2/3*(container_size(4) - figure_size(4));
+set(d,'Position',figure_size)
+
 set(d,'Visible','on');
 
 % Wait for d to close before running to completion
@@ -109,42 +105,4 @@ uiwait(d);
     function pushbutton1_KeyPressFcn(hObject, ~, ~)
         button_callback(hObject);
     end
-end
-
-
-function figure_size = getnicedialoglocation(figure_size, figure_units)
-% adjust the specified figure position to fig nicely over GCBF
-% or into the upper 3rd of the screen
-
-%  Copyright 1999-2010 The MathWorks, Inc.
-%  $Revision: 1.1.6.5 $
-
-% parentHandle = gcbf;
-% convertData.destinationUnits = figure_units;
-% if ~isempty(parentHandle)
-%     % If there is a parent figure
-%     convertData.hFig = parentHandle;
-%     convertData.size = get(parentHandle,'Position');
-%     convertData.sourceUnits = get(parentHandle,'Units');  
-%     c = []; 
-% else
-%     % If there is no parent figure, use the root's data
-%     % and create a invisible figure as parent
-%     convertData.hFig = figure('visible','off');
-%     convertData.size = get(0,'ScreenSize');
-%     convertData.sourceUnits = get(0,'Units');
-%     c = onCleanup(@() close(convertData.hFig));
-% end
-
-% Get the size of the dialog parent in the dialog units
-container_size = get(0,'ScreenSize');
-% hgconvertunits(convertData.hFig, convertData.size ,...
-%     convertData.sourceUnits, convertData.destinationUnits, get(convertData.hFig,'Parent'));
-
-% delete(c);
-
-figure_size(1) = container_size(1)  + 1/2*(container_size(3) - figure_size(3));
-figure_size(2) = container_size(2)  + 2/3*(container_size(4) - figure_size(4));
-
-
 end

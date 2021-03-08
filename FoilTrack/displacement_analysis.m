@@ -544,7 +544,7 @@ end %scale image
 function [x_bar x_std] = nanstats(x,dim)
 %
 % Combined copy of nanmean and nanstd after the scripts of:
-%    Jan Gl?scher, Neuroimage Nord, University of Hamburg, Germany
+%    Jan Glaescher, Neuroimage Nord, University of Hamburg, Germany
 %    email:       glaescher@uke.uni-hamburg.de
 % Optimsed for use here by Simon Hunt
 
