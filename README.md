@@ -13,7 +13,7 @@ markdown file. Note that (1) This is reseach software not written for public con
 all mine. If you find any please let me know. (2) Some parts of the scripts require Matlab toolboxes. See
 below for some further information. (3) The documentation is far from complete. It was written as aide-mémoire
 for when I use the scripts. (4) The scripts have been tested under Ubuntu 14.04 / Matlab 2014a and MacOS 10.13
-(High Siera) / MatLab 2017a. It is possible that the scripts do not work elsewhere.
+(High Siera) / MatLab 2017a. It is possible (but unlikely) that the scripts do not work elsewhere.
 
 ## Background and literature
 
@@ -28,9 +28,8 @@ details can be found in the CITATION file shipped with the software.
 
 FoilTrack is copyright of the authors. It is released under the terms of version 3 of the GNU General Public 
 License (GPLv3). This means you are free to run, study, share, and modify the software but that any 
-derivative work must be distributed 
-under the same or equivalent license terms. For full details please refer to the LICENCE file distributed with 
-FoilTrack.
+derivative work must be distributed under the same or equivalent license terms. For full details 
+please refer to the [LICENSE](./LICENSE) file distributed with FoilTrack.
 
 For ease of installation and avoid problems with versioning we distribute a handful of files and toolboxes 
 alongside FoilTrack. These were all released by their authors under the terms of copyleft of permissive licences that
@@ -40,7 +39,8 @@ created by Jonas Lundgren and released under the permissive license found at Foi
 * The esrf-pmedf toolbox created by Petr Mikulik and released under version 2 of the GPL
 * Jacobianest.m from John D'Errico's [DERIVEST suite](https://uk.mathworks.com/matlabcentral/fileexchange/13490-adaptive-robust-numerical-differentiation) and released under the permissive license
 * GetCases.m from Rody P.S. Oldenhuis' [FEX-getCases](https://github.com/rodyo/FEX-getCases) software relased under the MIT licnese.
-We are greatful for the efforts fo these authors.
+
+We are greatful for the efforts of these authors.
 
 ## Installation and use
 
