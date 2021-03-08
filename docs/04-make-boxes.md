@@ -29,3 +29,24 @@ Minimum intensity interpolated (poly)	| Uses a polynomial to interpolate between
 Minimum intensity interpolated (spline)	| Uses a spline to interpolate between the rows to find the minimum intensity.
 Maximum slope	| Finds the pixel row which has the maximum intensity gradient. For the foils in the top half of the image it looks for the gradient on the top of the foil and in the bottom of the image in the bottom of the foil 
 Maximum slope interpolated (spline)	| Uses a polynomial to interpolate between the rows to find the maximum intensity gradient. For the foils in the top half of the image it looks for the gradient on the top of the foil and in the bottom of the image in the bottom of the foil
+
+4.	**Validate the positions**
+The script locates the boxes using the setting above, plots the box locations on the image and presents the following dialogue box: 
+
+![Select Boxes Validation Inerface](./img/box_val.png)
+
+If the boxes are in the right place press “yes”, then the box positions are saved and second image figure appears on the right hand side of the screen with the boxes shown. This image is saved. If the boxes are not in the correct position use one of the other options:
+
+Option            |  Description
+------            | ------
+Yes	              | Finds the pixel row in the box with the minimum intensity.
+Move all X,Y	    | Allows the moving of all the boxes in X and Y. Used if the press was moved between data sets.
+Move Single Foils	| Allows single foils to be moved manually. 
+Select New Boxes	| Returns the script to the image rotation option and allows the selection of a new set of boxes.  
+Edit 	            | Allows manual editing of the boxes via the command line. 
+No	              | Generates and error and quits the box selection. 
+
+5.	**Move all (X,Y)**
+Text 
+6.	**An option Position single foil**
+Text
