@@ -28,10 +28,10 @@ addpath(genpath('.../ImageAnalysis'))
 ## Running the Scripts
 There are five parts to the running of the displacement scripts. Documentation
 can be found below or by following the links.
-1.	[Creation of batch Files](./01-list-files)
-2.	[Setup – AnalysisOptions](./02-analysis)
-3.	[Parsing the images](./03-parse)
-4.	[Selection of the boxes](./04-make-boxes)
+1.	[Creation of batch Files](./01-list-files.md)
+2.	[Setup – AnalysisOptions](./02-analysis.md)
+3.	[Parsing the images](./03-parse.md)
+4.	[Selection of the boxes](./04-make-boxes.md)
 5.	Calculating the Displacements (see below)
 6.	Calculate sinusoidal fits (see below)
 7.	Check sinusoidal fits (see below)
