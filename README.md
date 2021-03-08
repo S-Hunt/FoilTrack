@@ -39,8 +39,15 @@ created by Jonas Lundgren and released under the permissive license found at Foi
 * The esrf-pmedf toolbox created by Petr Mikulik and released under version 2 of the GPL
 * Jacobianest.m from John D'Errico's [DERIVEST suite](https://uk.mathworks.com/matlabcentral/fileexchange/13490-adaptive-robust-numerical-differentiation) and released under the permissive license
 * GetCases.m from Rody P.S. Oldenhuis' [FEX-getCases](https://github.com/rodyo/FEX-getCases) software relased under the MIT licnese.
+* Functions from [Jan Gläscher](https://uk.mathworks.com/matlabcentral/fileexchange/6837-nan-suite), 
+[Peder Axensten](https://uk.mathworks.com/matlabcentral/fileexchange/16177-chi2test),
+[Tom O'Haver](https://uk.mathworks.com/matlabcentral/fileexchange/23611-peakfit-m),
+[Brad Ridder](https://uk.mathworks.com/matlabcentral/fileexchange/17901-propagation-of-uncertainty), and
+[S. Zhang & J. Jin](https://people.sc.fsu.edu/~jburkardt/f77_src/special_functions/special_functions.html)
+as documented within the code.
 
 We are greatful for the efforts of these authors.
+
 
 ## Installation and use
 
