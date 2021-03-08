@@ -156,8 +156,7 @@ for n = 1 : number_boxes
             area1extended = spot_remove(area1extended);
         end
         if NaN_bg == 1
-            % area1extended = bg_makeNaN(area1extended); %original function
-            area1extended = smooth_image(area1extended); %replacement function
+            area1extended = bg_makeNaN(area1extended); %original function
         end
         I1(boxY(n,1)-k_down:boxY(n,2)+k_up, boxX(n,1):boxX(n,2)) = area1extended;
 
@@ -187,8 +186,7 @@ for n = 1 : number_boxes
             if NaN_bg == 1
                 % area2all = stripe_remove(area2all); %this is part of the bg_removal and is needed here for crapy data.
                 
-                % area1extended = bg_makeNaN(area1extended); %original function
-                area2all = smooth_image(area2all); %replacement function
+                area1extended = bg_makeNaN(area1extended); %original function
             end
             if scale == 1
                 area2all = scale_image(area1extended, area2all);
@@ -504,13 +502,6 @@ end %spot_remove
 % end %bg_makeNaN
 
 
-function Im = smooth_image(Im)
-
-%Im = stripe_remove(Im);
-Im = smoothn(Im);
-
-end %smooth_image
-
 function I_clean = bg_makeNaN(Im)
 
 Im_new1 = stripe_remove(Im);
@@ -553,7 +544,7 @@ end %scale image
 function [x_bar x_std] = nanstats(x,dim)
 %
 % Combined copy of nanmean and nanstd after the scripts of:
-%    Jan Gl?scher, Neuroimage Nord, University of Hamburg, Germany
+%    Jan Glaescher, Neuroimage Nord, University of Hamburg, Germany
 %    email:       glaescher@uke.uni-hamburg.de
 % Optimsed for use here by Simon Hunt
 
