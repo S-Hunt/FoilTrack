@@ -88,7 +88,7 @@ AnalysisOptions
 ```
 opens the window (illustrated below) which presents the options required by the image analysis scripts. The green highlighted boxes need to be changed for the experiment being analysed, the orange may need to be changed and the red boxes are unlikely to be changed.
 
-![AnalysisOptions Interface](/img/menu.png)
+![AnalysisOptions Interface](./img/menu.png)
 
 The options are: 
 
@@ -144,7 +144,7 @@ ImageAnalysis('file name', ‘boxes’)
 Or set the switch in manytimes to ‘boxes’ and run. Two files are created by this routine (1) ‘file name_boxes.mat’ and ‘file name_boxes.tiff’. The first is a matlab mat file containing the x,y positions of the selected boxes and the second in an image of these boxes overlaid on the reference X-radiograph.
 
 
-![Select Boxes Interfaces](/img/setup_box.png)
+![Select Boxes Interfaces](./img/setup_box.png)
 
 Running ‘boxes’ option opens and plots the reference image of the left hand side of the screen. This is followed by a series of dialogue boxes which aid the location and selection of the boxes. If there are multiple sets of data the boxes are propagated from one data set to the next via a file called data_prev.mat. If data_prev.mat exists it is assumed the box selection routine optimises the box position and presents the dialogue box for 
 1.	**Rotation of the image**
@@ -155,7 +155,7 @@ Select the top left and bottom right corner of the desired boxes in the image. W
 Dialogue boxes to automatically size and locate the boxes follow.  The first window allows for the cutting of the selected areas into many horizontal sections (for thermal diffusivity experiments) and setting the vertical height of the boxes. It is recommended that the heights of the boxes in the image are a little greater than the shadow of the foils (but this can be adjusted later).
 
 
-![Select Boxes Interfaces](/img/box_position.png)
+![Select Boxes Interfaces](./img/box_position.png)
 
 The second dialogue box is for the selection of the method for automatically position the boxes over the features in the image. The box is centred over the feature selected and the options in the list have the following meanings:
 
@@ -170,7 +170,7 @@ Maximum slope interpolated (spline)	| Uses a polynomial to interpolate between t
 4.	**Validate the positions**
 The script locates the boxes using the setting above, plots the box locations on the image and presents the following dialogue box: 
 
-![Select Boxes Validation Inerface](/img/box_val.png)
+![Select Boxes Validation Inerface](./img/box_val.png)
 
 If the boxes are in the right place press “yes”, then the box positions are saved and second image figure appears on the right hand side of the screen with the boxes shown. This image is saved. If the boxes are not in the correct position use one of the other options:
 
