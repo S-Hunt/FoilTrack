@@ -381,10 +381,10 @@ switch to_do
 %             figure
             imagesc(prof'), colormap(gray); hold on
             title('Profile through band in images');
-            xlabel('image number')
+            xlabel('image number in series')
             ylabel('mean intensity across profile') 
 
-            if strcmpi(to_do, 'profile track') == 1
+            if strcmpi(to_do, 'profile track') == 1 
                 %select foils/minima to be tracked.
                 [x_mins, y_mins] = ginput;
                 x_mins = round(x_mins);
@@ -429,6 +429,8 @@ switch to_do
                     plot(1:max_frames, prof_mins(:,x),'r.')
                 end
             end
+            saveas(gcf,[run_name,'_profile_series.jpg'])
+            
             
             for x = 1 : length(uids) 
                 out_ref{x} = uids(x); %N.B. out_ref and out_nos need to be cell arrays inorder to cope with any change in length of the strings.
@@ -462,7 +464,7 @@ switch to_do
             
             
             outfile_name = strcat(run_name,'_profiles.mat');
-            save(outfile_name, 'prof_out', 'x_im', 'y_im')
+            save(outfile_name, 'profile_out', 'x_im', 'y_im')
             
 %             
 %             XLS_out = cell(length(uids)+5,length(x_mins)+2);
