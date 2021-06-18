@@ -464,7 +464,7 @@ switch to_do
             
             
             outfile_name = strcat(run_name,'_profiles.mat');
-            save(outfile_name, 'profile_out', 'x_im', 'y_im')
+            save(outfile_name, 'profiles_out', 'x_im', 'y_im')
             
 %             
 %             XLS_out = cell(length(uids)+5,length(x_mins)+2);
