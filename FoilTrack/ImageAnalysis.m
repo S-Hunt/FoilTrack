@@ -263,7 +263,9 @@ switch to_do
 
         %file_id is closed at the end of the switch/case function
         
-    case {'view', 'profile', 'movie', 'scale', 'screen'}
+    case {'view', 'profile', 'movie', 'scale', 'screen', 'profile track'}
+        global x_im y_im %remeber the positions of the profile selections
+        
 %         clf
         block_frames = 200;
         frame_step = 1;
@@ -304,7 +306,7 @@ switch to_do
                     start = 1;
                 end
             end
-        elseif strcmpi(to_do, 'profile')
+        elseif strcmpi(to_do, 'profile') || strcmpi(to_do, 'profile track')
             start = 1;
         end
         
@@ -332,6 +334,7 @@ switch to_do
                 %Im = Im-repmat(diff,[1,1,size(Im,3)]);
             end
             
+            profiles_out=[];
             for x = 1 : frame_step : block_frames
                 framenum = j + x - 1;
                 image = Im(:,:,x);
@@ -343,8 +346,8 @@ switch to_do
                 imagesc(image,clims); axis square; colormap(gray); %line inserted to make vidoe of spt_004 experimental data
                 title([num2str(framenum), ' / ', num2str(max_frames)]);
                 
-                if strcmpi(to_do, 'profile') == 1 || strcmpi(to_do, 'scale') == 1
-                    if exist('y_im','var') == 0
+                if strcmpi(to_do, 'profile') == 1 || strcmpi(to_do, 'profile track') == 1 ||strcmpi(to_do, 'scale') == 1
+                    if exist('y_im','var') == 0 | isempty(y_im)==1
                         [x_im,y_im] = ginput(2);
                         x_im = round(x_im);
                         y_im = round(y_im);
@@ -353,8 +356,12 @@ switch to_do
                         h = waitbar(0,'Calculating profiles...');
                     end
                     prof(framenum,:) = nanmean(image(y_im(1):y_im(2),x_im(1):x_im(2)),2);
-
-                    waitbar(framenum / max_frames)
+                    
+                    profiles_out(end+1).profile = prof(framenum,:);
+                    profiles_out(end).timestamp = timestamps(framenum);
+                    profiles_out(end).uid = uids(framenum);
+                    
+                    h = waitbar(framenum / max_frames);
                 elseif strcmpi(to_do, 'movie') == 1
                     F = getframe(hij);
                     writeVideo(writerObj,F);
@@ -368,7 +375,7 @@ switch to_do
             end
         end
 
-        if strcmpi(to_do, 'profile') == 1
+        if strcmpi(to_do, 'profile') == 1 || strcmpi(to_do, 'profile track') == 1
             
             close(h)
 %             figure
@@ -377,51 +384,55 @@ switch to_do
             xlabel('image number')
             ylabel('mean intensity across profile') 
 
-            %select foils/minima to be tracked.
-            [x_mins, y_mins] = ginput;
-            x_mins = round(x_mins);
-            y_mins = round(y_mins);
-            for x = 1:length(x_mins)
-                
-                %find local minimum
-                local_y_min = y_mins(x)-50; if local_y_min < 1, local_y_min = 1; end
-                local_y_max = y_mins(x)+50; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
-                [I]=polymin(prof(x_mins(x),local_y_min:local_y_max));
-                I = I + local_y_min;
-                prof_mins(x_mins(x),x) = I;
-                
-                frame = x_mins(x);
-                moving_min = I;
-                window = 20;
-                while frame <= max_frames-1 %finds minima in increasing frames from selected point
-                    frame = frame+1;
-                    
-                    local_y_min = round(moving_min)-window; if local_y_min < 1, local_y_min = 1; end
-                    local_y_max = round(moving_min)+window; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
-                
-                    [II]=polymin(prof(frame,local_y_min:local_y_max));
-                    moving_min = II + moving_min-window;
-                    prof_mins(frame,x) = moving_min;
-                    
+            if strcmpi(to_do, 'profile track') == 1
+                %select foils/minima to be tracked.
+                [x_mins, y_mins] = ginput;
+                x_mins = round(x_mins);
+                y_mins = round(y_mins);
+                for x = 1:length(x_mins)
+
+                    %find local minimum
+                    local_y_min = y_mins(x)-50; if local_y_min < 1, local_y_min = 1; end
+                    local_y_max = y_mins(x)+50; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
+                    [I]=polymin(prof(x_mins(x),local_y_min:local_y_max));
+                    I = I + local_y_min;
+                    prof_mins(x_mins(x),x) = I;
+
+                    frame = x_mins(x);
+                    moving_min = I;
+                    window = 20;
+                    while frame <= max_frames-1 %finds minima in increasing frames from selected point
+                        frame = frame+1;
+
+                        local_y_min = round(moving_min)-window; if local_y_min < 1, local_y_min = 1; end
+                        local_y_max = round(moving_min)+window; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
+
+                        [II]=polymin(prof(frame,local_y_min:local_y_max));
+                        moving_min = II + moving_min-window;
+                        prof_mins(frame,x) = moving_min;
+
+                    end
+
+                    frame = x_mins(x);
+                    moving_min = I;
+                    while frame >= 2  %finds minima in decreasing frames from selected point
+                        frame = frame-1;
+
+                        local_y_min = round(moving_min)-window; if local_y_min < 1, local_y_min = 1; end
+                        local_y_max = round(moving_min)+window; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
+
+                        [II]=polymin(prof(frame,local_y_min:local_y_max));
+                        moving_min = II + moving_min-window;
+                        prof_mins(frame,x) = moving_min;
+
+                    end
+                    plot(1:max_frames, prof_mins(:,x),'r.')
                 end
-                
-                frame = x_mins(x);
-                moving_min = I;
-                while frame >= 2  %finds minima in decreasing frames from selected point
-                    frame = frame-1;
-                    
-                    local_y_min = round(moving_min)-window; if local_y_min < 1, local_y_min = 1; end
-                    local_y_max = round(moving_min)+window; if local_y_max > size(prof,2), local_y_max = size(prof,2); end
-                
-                    [II]=polymin(prof(frame,local_y_min:local_y_max));
-                    moving_min = II + moving_min-window;
-                    prof_mins(frame,x) = moving_min;
-                    
-                end
-                plot(1:max_frames, prof_mins(:,x),'r.')
             end
             
-            
+            for x = 1 : length(uids) 
+                out_ref{x} = uids(x); %N.B. out_ref and out_nos need to be cell arrays inorder to cope with any change in length of the strings.
+            end
             %write output file.
             %fid = fopen(strcat(expt,'_profiles.xls'), 'w');
             %fprintf(repmat('%s, ' 
@@ -429,26 +440,29 @@ switch to_do
             %save minima locations.
             
             %write the offsets to the output file.
-            
-            
             if iscell(expt) == 1
                 expt = expt{1};
             end
-            outfile_name = strcat(expt,'_profiles.txt');
+            if strcmpi(to_do, 'profile track') == 1
+                
+                outfile_name = strcat(expt,'_profiles.txt');
+
+                %make headers
+                headers.file_name = file_name;
+                headers.run_name  = run_name;
+                headers.caller    = [mfilename('fullpath'),'.m'];
+                headers.Xmin      = x_im(1);
+                headers.Xmax      = x_im(2);
+
+                status = WritePositionChange(outfile_name, 'OpenNew');
+                status = WritePositionChange(outfile_name, 'profile header', headers);
+                status = WritePositionChange(outfile_name, 'values', prof_mins, {out_ref{:}}, timestamps);
+                status = WritePositionChange(outfile_name, 'close');
+            end
             
-            %make headers
-            headers.file_name = file_name;
-            headers.run_name  = run_name;
-            headers.caller    = [mfilename('fullpath'),'.m'];
-            headers.Xmin      = x_im(1);
-            headers.Xmax      = x_im(2);
-    
-            status = WritePositionChange(outfile_name, 'OpenNew');
-            status = WritePositionChange(outfile_name, 'profile header', headers);
-            status = WritePositionChange(outfile_name, 'values', prof_mins, {uids{:}}, timestamps-timestamps(1));
-            status = WritePositionChange(outfile_name, 'close');
             
-            
+            outfile_name = strcat(run_name,'_profiles.mat');
+            save(outfile_name, 'prof_out', 'x_im', 'y_im')
             
 %             
 %             XLS_out = cell(length(uids)+5,length(x_mins)+2);
