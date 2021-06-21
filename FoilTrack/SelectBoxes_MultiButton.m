@@ -12,7 +12,7 @@ colw = box_width-30;
 FigPos    = get(0,'DefaultFigurePosition');
 FigPos(3) = box_width;
 FigPos(4) = 100;
-FigPos    = getnicedialoglocation(FigPos, get(0,'DefaultFigureUnits'));
+%FigPos    = getnicedialoglocation(FigPos, get(0,'DefaultFigureUnits'));
 % set(d,'Position',FigPos)
 
 % d = figure('Name',title,'Position',FigPos);
