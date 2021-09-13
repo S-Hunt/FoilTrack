@@ -270,8 +270,9 @@ if ~isempty(period_pos)
 
     %Ignore (remove) 's' from the list of posibilities if it comes before the first _
     und = strfind(file_name_cut, '_');
-    period_pos(period_pos < und(1)) = [];
-
+    if ~isempty(und)
+        period_pos(period_pos < und(1)) = [];
+    end
     if length(period_pos) >= 1 %if there is more than 1 s check the characters in front of it to see which is the period
         leading = file_name_cut(period_pos-1); %list of characters preceeding the s
         for x = 1 : length(period_pos)

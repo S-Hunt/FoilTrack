@@ -80,7 +80,8 @@ beamlines = {...'PRESENT BUT NOT IMPLEMENTED';
     'DESY: MAX200x';
     'NSLS: X17B2';
     'NSLS: X17B2ss';
-    'NSLS2: MaxPD';};
+    'NSLS2: MaxPD';
+    'generic';};
 beamlines(:,2) = CleanBeamlineName(beamlines(:,1));
 expt_loc = 1;
 

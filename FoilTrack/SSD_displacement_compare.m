@@ -1,5 +1,8 @@
 function SSD_displacement_compare(file_list)
 
+
+global data
+
 action = size(file_list);
 
 close all
@@ -28,31 +31,34 @@ end
 
 
 %% read position change data files and other files
-for x = 1:size(file_list,1)
+if isempty(data)
+    for x = 1:size(file_list,1)
 
-    %import the postion change data
-    [foil_change_data_x, time_stamps_x, box_positions_x, number_boxes_x, ...
-        number_images_x] = ReadPositionChangeFile([file_list{x}, position_ending]);
-    
-    %import displacement sine fits.
-    DispData = load([file_list{x}, disp_FITS_ending]);
+        %import the postion change data
+        [foil_change_data_x, time_stamps_x, box_positions_x, number_boxes_x, ...
+            number_images_x] = ReadPositionChangeFile([file_list{x}, position_ending]);
 
-    %import SSD sine fits_FITS files.
-    SSDdata = load([file_list{x}, SSD_FITS_ending]);
-    
-    %combine boxes. -- from raw displacement data.
-    [length_change_hold, image_time_hold, reference_length_hold, horizontal_position_pixels_hold] = ...
-    CombineBoxes(vars.length_type, 'displacements', foil_change_data_x, time_stamps_x, ...
-                    box_positions_x(3:4,:)', box_positions_x(1:2,:)');
+        %import displacement sine fits.
+        DispData = load([file_list{x}, disp_FITS_ending]);
 
-    %stash all the data in a structure.
-    data.(file_list{x}).length_change              = length_change_hold;
-    data.(file_list{x}).image_time                 = image_time_hold;
-    data.(file_list{x}).reference_length           = reference_length_hold;
-    data.(file_list{x}).horizontal_position_pixels = horizontal_position_pixels_hold;
-    data.(file_list{x}).SSD                        = SSDdata;
-    data.(file_list{x}).Disp                       = DispData;
-        
+        %import SSD sine fits_FITS files.
+        SSDdata = load([file_list{x}, SSD_FITS_ending]);
+
+        %combine boxes. -- from raw displacement data.
+        [length_change_hold, image_time_hold, reference_length_hold, horizontal_position_pixels_hold] = ...
+        CombineBoxes(vars.length_type, 'displacements', foil_change_data_x, time_stamps_x, ...
+                        box_positions_x(3:4,:)', box_positions_x(1:2,:)');
+
+        %stash all the data in a structure.
+        data.(file_list{x}).SSD                        = SSDdata;
+        data.(file_list{x}).Disp                       = DispData;
+
+        data.(file_list{x}).length_change              = length_change_hold;
+        data.(file_list{x}).image_time                 = image_time_hold;
+        data.(file_list{x}).reference_length           = reference_length_hold;
+        data.(file_list{x}).horizontal_position_pixels = horizontal_position_pixels_hold;
+
+    end
 end
 
 % %calculate length changes from position change data
@@ -63,6 +69,8 @@ end
 %     length1(:,x) = foil_change_data(:,1,x) - foil_change_data(:,2,x);
 %     length2(:,x) = foil_change_data(:,2,x) - foil_change_data(:,3,x);
 % end
+
+
 
 %time_stamps = time_stamps - repmat(time_stamps(1,:), size(length1,1),1);
 
@@ -88,10 +96,10 @@ end
 
 
 %number of data sets from displacement length changes
-number_pairs = size(length_change_hold, 2);
+number_pairs = size(data.(file_list{1}).length_change, 2);
 
 %number of foils in the data set.
-number_fits = size(data.(file_list{x}).SSD.A_all,1);
+number_fits = size(data.(file_list{1}).SSD.A_all,1);
 
 %compare quality of fits
 if 1
@@ -116,8 +124,6 @@ if 1
     max(amp_err_rat(:))
     min(amp_err_rat(:))
     
-    keyboard
-
 end
 
 
@@ -139,7 +145,7 @@ for x = 1 : size(file_list)
         times     = data.(file_list{x}).Disp.image_time;
         
         %sine fit from displacements.
-        data.(file_list{x}).Disp.Strain(y,:) = Phases_SineFunc(times, period, amplitude, phase);
+        data.(file_list{x}).Disp.sinusoid(y,:) = Phases_SineFunc(times, period, amplitude, phase);
         
 %         StrainDisp(y,:)  = amplitude * sin(times./period(x,1)*2*pi + Phases(x,1));
         %StrainDisp(2,:) = amplitude(x,2) * sin(times./period(x,2)*2*pi + Phases(x,2));
@@ -151,7 +157,7 @@ for x = 1 : size(file_list)
         times     = data.(file_list{x}).SSD.image_time(y,:);
         
         %sine fit of the SSD data.
-        data.(file_list{x}).SSD.Strain(y,:) = Phases_SineFunc(times, period, amplitude, phase);
+        data.(file_list{x}).SSD.sinusoid(y,:) = Phases_SineFunc(times, period, amplitude, phase);
                 %strain1  = amplitude(x,1) * sin(times./period(x,1)*2*pi + Phases(x,1));
         %strain2 = amplitude(x,2) * sin(times./period(x,2)*2*pi + Phases(x,2));
         
@@ -190,9 +196,28 @@ for x = 1 : size(file_list)
 
         
     end
+    
+    %get reference lengths and changes in length
+    ref_positions = data.(file_list{x}).SSD.single_fits.reference_position{1};
+    change_position = data.(file_list{x}).SSD.surfmins(:,end) - data.(file_list{x}).SSD.surfmins(:,1);
+    
+    for y = 1:number_pairs
+        
+        
+        ref_length(x,y) = ref_positions(y+1) - ref_positions(y);
+        change_length(x,y) = change_position(y+1) - change_position(y);
+        
+        bulk_strain(x,y) = change_length(x,y)./ref_length(x,y);
+        elapsed_time(x) = times(end)-times(1);
+        bulk_strain_rate(x,y) = bulk_strain(x,y)./(times(end)-times(1));
+        
+    end
          %keyboard   
 end
 
+
+
+keyboard
 %% plot stuff
 
 for x = 1 : size(file_list)
@@ -206,20 +231,20 @@ for x = 1 : size(file_list)
         
         %All_BackG   = data.(file_list{x}).Disp.BackGround; %in disp calculation bg is removed before sine is fit.
         
-        Disp_times  = data.(file_list{x}).Disp.image_time;
-        Disp_strain = data.(file_list{x}).Disp.Strain;
-        Disp_backG  = data.(file_list{x}).Disp.BackGround';
+        Disp_times    = data.(file_list{x}).Disp.image_time;
+        Disp_sinusoid = data.(file_list{x}).Disp.sinusoid;
+        Disp_backG    = data.(file_list{x}).Disp.BackGround';
         
         All_Fitted = ismember(All_times, Disp_times);
         
-        SSD_times   = data.(file_list{x}).SSD.image_time;
-        SSD_strain  = data.(file_list{x}).SSD.Strain;
+        SSD_times    = data.(file_list{x}).SSD.image_time;
+        SSD_sinusoid = data.(file_list{x}).SSD.sinusoid;
         
         %plot fits vs. displacement.
         %displacements and fits
         
         %plot all foils and fits together.
-        figure(1)
+        figure%(1)
         for y = 1:number_pairs
             subplot(number_pairs,1,y), cla, hold on,
             
@@ -227,71 +252,74 @@ for x = 1 : size(file_list)
             plot(All_times, All_length(:,y), ':b.')
             
             %plot disp fit
-            plot(Disp_times, Disp_strain(y,:)+Disp_backG(y,:), '-r')
+            plot(Disp_times, Disp_sinusoid(y,:)+Disp_backG(y,:), '-r')
 %             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:), '-r')
             %plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
             
             %plot SSD fit
             %plot(data.(file_list{x}).SSD.image_time(y,:), data.(file_list{x}).SSD.Strain(y,:), '-k')
-            plot(SSD_times(y,:), SSD_strain(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:), '-k')
+            plot(SSD_times(y,:), SSD_sinusoid(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:), '-k')
             
             hold off
             if y == 1
                 title(file_list{x}, 'Interpreter', 'none')
             end
+            pause
         end
         
         
         %plot individual fits and residuals
-        for y = 1:number_pairs
-            
-            figure
-            subplot(2,1,1), hold on,
-            
-            %plot displacment data
-            plot(All_times, All_length(:,y), 'b.', 'MarkerSize', 7)
-            
-            %plot disp fit
-            plot(Disp_times, Disp_strain(y,:)+Disp_backG(y,:), '-r')
-%             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:), '-r')
-            %plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
-            
-            %plot SSD fit
-            %plot(data.(file_list{x}).SSD.image_time(y,:), data.(file_list{x}).SSD.Strain(y,:), '-k')
-            plot(SSD_times(y,:), SSD_strain(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:), '-k')
-            
-            hold off
-            
-            ylabel('Length change (pixels)')
-            xlabel('Time (s)')
-            title('Fits')
-            
-            subplot(2,1,2), hold on,
-            
-            SSD_fit = SSD_strain(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:);
-            SSDresiduals = All_length(:,y) - SSD_fit';
-            OldFitDiffs = Disp_strain(y,:)+Disp_backG(y,:) - SSD_fit;
-            
-            %plot displacment data
-            plot(All_times, SSDresiduals, 'b.')
-            
-            %plot disp fit
-            plot(Disp_times, OldFitDiffs, '-r')
-%             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:), '-r')
-            %plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
-            
-            %plot SSD fit
-            %plot(data.(file_list{x}).SSD.image_time(y,:), data.(file_list{x}).SSD.Strain(y,:), '-k')
-            plot(SSD_times(y,:), zeros(size(SSD_times(y,:))), '-k')
-            
-            ylabel('Residuals (pixels)')
-            xlabel('Time (s)')
-            title('Residuals')
-            set(gca, 'Ylim', [-0.05, 0.05])
-            
-%             if y == 1
-%                 title(file_list{x}, 'Interpreter', 'none')
-%             end
+        if 0
+            for y = 1:number_pairs
+
+                figure
+                subplot(2,1,1), hold on,
+
+                %plot displacment data
+                plot(All_times, All_length(:,y), 'b.', 'MarkerSize', 7)
+
+                %plot disp fit
+                plot(Disp_times, Disp_sinusoid(y,:)+Disp_backG(y,:), '-r')
+    %             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:), '-r')
+                %plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
+
+                %plot SSD fit
+                %plot(data.(file_list{x}).SSD.image_time(y,:), data.(file_list{x}).SSD.Strain(y,:), '-k')
+                plot(SSD_times(y,:), SSD_sinusoid(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:), '-k')
+
+                hold off
+
+                ylabel('Length change (pixels)')
+                xlabel('Time (s)')
+                title('Fits')
+
+                subplot(2,1,2), hold on,
+
+                SSD_fit = SSD_sinusoid(y,:)+data.(file_list{x}).SSD.surfmins(y,:)-data.(file_list{x}).SSD.surfmins(y+1,:);
+                SSDresiduals = All_length(:,y) - SSD_fit';
+                OldFitDiffs = Disp_sinusoid(y,:)+Disp_backG(y,:) - SSD_fit;
+
+                %plot displacment data
+                plot(All_times, SSDresiduals, 'b.')
+
+                %plot disp fit
+                plot(Disp_times, OldFitDiffs, '-r')
+    %             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:), '-r')
+                %plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
+
+                %plot SSD fit
+                %plot(data.(file_list{x}).SSD.image_time(y,:), data.(file_list{x}).SSD.Strain(y,:), '-k')
+                plot(SSD_times(y,:), zeros(size(SSD_times(y,:))), '-k')
+
+                ylabel('Residuals (pixels)')
+                xlabel('Time (s)')
+                title('Residuals')
+                set(gca, 'Ylim', [-0.05, 0.05])
+
+    %             if y == 1
+    %                 title(file_list{x}, 'Interpreter', 'none')
+    %             end
+            end
         end
         
         
@@ -312,10 +340,10 @@ for x = 1 : size(file_list)
             figure(2), cla, hold on,
             plot(All_length(All_Fitted,e)-Disp_backG(e,:)', All_length(All_Fitted,s)-Disp_backG(s,:)', ':b.')
             %plot disp fit
-            plot(Disp_strain(e,:), Disp_strain(s,:), '-r')
+            plot(Disp_sinusoid(e,:), Disp_sinusoid(s,:), '-r')
             %             plot(data.(file_list{x}).Disp.image_time, data.(file_list{x}).Disp.Strain(y,:) + data.(file_list{x}).Disp.BackGround(:,y)', '-r')
             %plot SSD fit
-            plot(SSD_strain(e,:), SSD_strain(s,:), '-k')
+            plot(SSD_sinusoid(e,:), SSD_sinusoid(s,:), '-k')
             
         end
         

@@ -431,21 +431,21 @@ if ~isempty(power_file) == 1
 end
 
 
-% %sort the images by time. 
-% if numel(unique(im_times)) == numel(im_times)
-%     [im_times, order] = sort(im_times,direction);
-% else
-% % If the time stamps are not unique sort by image number
-%     for x = 1:length(allimages)
-%         aa(x,:) = FileTitleInformation(allimages(x).name, 'warn off');
-%     end
-%     [~, order] = sort(cell2mat(aa(:,5)),direction);
-%     im_times = im_times(order);
-% end
-% allimages = allimages(order);
-% if add_temp == 1
-%     im_temp = im_temp(order);
-% end
+%sort the images by time. 
+if numel(unique(im_times)) == numel(im_times)
+    [im_times, order] = sort(im_times,direction);
+else
+% If the time stamps are not unique sort by image number
+    for x = 1:length(allimages)
+        aa(x,:) = FileTitleInformation(allimages(x).name, 'warn off');
+    end
+    [~, order] = sort(cell2mat(aa(:,5)),direction);
+    im_times = im_times(order);
+end
+allimages = allimages(order);
+if add_temp == 1
+    im_temp = im_temp(order);
+end
 
 %make Lst filename
 seps = find(target_dir == filesep);
