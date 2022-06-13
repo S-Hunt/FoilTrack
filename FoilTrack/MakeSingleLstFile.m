@@ -250,7 +250,10 @@ for i = 1:num_images
 %         im_times(i) = ImTimes(loc);       
 
 %else
-    if isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) == 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
+    if isfield(im_info, 'DateTime')== 1 % time stamps from Fang's experiments in Japan.
+        tmp_date = regexp(im_info.ImageDescription, 'Date="(?<year>\d*)\/(?<month>\d*)\/(?<day>\d*)",Time="(?<hour>\d*):(?<min>\d*):(?<seconds>0|[1-9]\d*)(?<Partseconds>\.\d+)', 'names');
+        im_times(i) = posixtime(datetime(str2num(tmp_date.year), str2num(tmp_date.month), str2num(tmp_date.day), str2num(tmp_date.hour), str2num(tmp_date.min), str2num(tmp_date.seconds)+str2num(tmp_date.Partseconds)));
+    elseif isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) == 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
         im_times(i) = im_info.UnknownTags.Value;
     elseif isfield(im_info, 'UnknownTags') && numel(im_info.UnknownTags.Value) >= 1 %time tags from NSLS and APS large volume press beamlines -- if they exist
         im_times(i) = im_info.UnknownTags(1).Value;

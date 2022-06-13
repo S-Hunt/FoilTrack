@@ -69,7 +69,7 @@ end
 %% Image Figure
 
 %set colour scale limits in image.
-if exist('prctile') == 2 %=2two is function in matlab search directories
+if 0%exist('prctile') == 2 %=2two is function in matlab search directories
     
     lis  =  PlotI(I1, Im_plot_type, 'GetLims', 5);
     limitbot = lis(1);
