@@ -367,6 +367,10 @@ if strcmpi(expt_type, 'td') == 1
     
     uforce = unique(force);
     utemp = unique(temp);
+    if strcmpi(direction, 'descend') == 1
+        uforce = fliplr(uforce);
+        utemp = fliplr(utemp);
+    end
     f = 1;
     t = 1;
     done = 0;
