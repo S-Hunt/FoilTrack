@@ -653,28 +653,31 @@ switch to_do
                 case 'ref' %use reference image for analysis
                   
                     %pass image to displacement anaylsis for preprocessing -- NaN bright spots and NaN background
-                    image1 = displacement_analysis('preprocess', image1, [], xBox, yBox, disp_args{:});
+                    if j == start
+                        image1 = displacement_analysis('preprocess', image1, [], xBox, yBox, disp_args{:});
+                    end
                     %this is done here so that the pre-processing for the
                     %displacement experiments can be done in the correct
                     %place as well. 
-                    
+                    % only needs to be done once. 
 
                     %Call function to do the work
                     % separate the calls for paralell and linear for loops
-                    % to speep up code when small number of boxes
-                    
-                    % This should be replaced with calls to parfeval
-                    % because the execution is asynchronous.
+                    % to speed up code when small number of boxes
                     if parforArg > 1
+                        % This should be replaced with calls to parfeval
+                        % because the execution is asynchronous.
                         parfor (x = 1 : block_frames,parforArg) 
-                            image2 = second_frames(:,:,x);
                             fprintf(1, '%s; Doing cross-corellation of images %4.0f and %4.0f \n', run_name, ref_id, nos(x));
+                            image2 = second_frames(:,:,x);
+                            image2 = displacement_analysis('preprocess', image2, [], xBox, yBox, disp_args{:});
                             [offsets(x,:), SSD_temp_array(:,:,x), pos_temp_array(:,:,x)]  = displacement_analysis(AVmin_type, image1, image2, xBox, yBox, disp_args{:}); %<-disp analysis row->% this is needed to find right row for disp analysis version
                         end
                     else
                         for x = 1 : block_frames
-                            image2 = second_frames(:,:,x);
                             fprintf(1, '%s; Doing cross-corellation of images %4.0f and %4.0f \n', run_name, ref_id, nos(x));
+                            image2 = second_frames(:,:,x);
+                            image2 = displacement_analysis('preprocess', image2, [], xBox, yBox, disp_args{:});
                             [offsets(x,:), SSD_temp_array(:,:,x), pos_temp_array(:,:,x)]  = displacement_analysis(AVmin_type, image1, image2, xBox, yBox, disp_args{:}); %<-disp analysis row->% this is needed to find right row for disp analysis version
                         end
                     end  
