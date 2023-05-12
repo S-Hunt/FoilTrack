@@ -8,7 +8,7 @@ lengths to be determined and this ability has been used to enable exererimental 
 rheology, anelasticity, and thermal conductivity. The scripts are able to process most common file formats and
 can work in user-supervised or automated batch processing mode.
 
-Documentation, such as it is, for the scripts is provided in the [documentation.md](./documentation.md)
+Documentation, such as it is, for the scripts is provided in the [documentation](./docs/index.md)
 markdown file. Note that (1) This is reseach software not written for public consumption. The many bugs are
 all mine. If you find any please let me know. (2) Some parts of the scripts require Matlab toolboxes. See
 below for some further information. (3) The documentation is far from complete. It was written as aide-mémoire
