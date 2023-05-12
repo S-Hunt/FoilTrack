@@ -69,7 +69,7 @@ end
 %% Image Figure
 
 %set colour scale limits in image.
-if exist('prctile') == 2 %=2two is function in matlab search directories
+if 0%exist('prctile') == 2 %=2two is function in matlab search directories
     
     lis  =  PlotI(I1, Im_plot_type, 'GetLims', 5);
     limitbot = lis(1);
@@ -282,7 +282,7 @@ while strcmpi(processing,'done') == 0
                 Im.text(n) = text(textx,texty,name,'color','r','HorizontalAlignment','center','VerticalAlignment','top',...
                     'Parent', Im.Plot);
             else
-                Im.text(n) = text(textx,texty+10,name,'color','r','HorizontalAlignment','left','VerticalAlignment','middle','Image_rotation',-90,...
+                Im.text(n) = text(textx,texty+10,name,'color','r','HorizontalAlignment','left','VerticalAlignment','middle',...
                     'Parent', Im.Plot);
             end
         end
@@ -437,7 +437,7 @@ if image_boxes == 0
                     'Parent', Im2.Plot);
             else
                 Im2.text(n) = text(textx,texty+10,name,'color','r','HorizontalAlignment','left','VerticalAlignment','middle',...
-                    'Image_rotation',-90, 'Parent', Im2.Plot);
+                    'Parent', Im2.Plot);
             end
         end
     end

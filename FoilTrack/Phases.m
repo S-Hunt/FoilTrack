@@ -118,6 +118,10 @@ end
 fprintf(1, '\n Phases of %s \n', file_name);
 
 [foil_change_data, image_time, box_positions, ~, number_images] = ReadPositionChangeFile(file_name);
+if numel(number_images) ~=1
+    %catch for changes in ReadPositionChangeFile behaviour
+    number_images = size(number_images,1);
+end
 
 %moves the time stamps so that t=0 for the first image
 image_time = image_time - image_time(1);

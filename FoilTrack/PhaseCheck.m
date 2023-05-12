@@ -215,7 +215,7 @@ if plots_on == 1
     dcm_obj = datacursormode(fig);
     set(dcm_obj,'UpdateFcn',{@myupdatefcn,data_names})
     
-    pause;
+    %pause;
 end
 
 for i = 1:length(nominal_periods)

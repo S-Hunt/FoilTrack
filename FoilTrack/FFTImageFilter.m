@@ -23,23 +23,44 @@ if nargin == 3
     filt_out = varargin{1};
 end
 
-
+% imagesc(Image)
+% figure
+% imagesc(FFT_filter)
 %make sure the image is a double. 
+
 Image = double(Image);
 
-% Fourier transform the image
-Fim = fftshift(fft2(Image));
+if ndims(Image) == 3
+    n_images = size(Image,3);
+else
+    n_images = 1;
+end
 
-%filter the FFT-Im using the map
-% FIX ME: there should be a switch in here for inside or outside the
-% filter.
-%if filt_out == 0
-%    FFTimage_filtered = fftshift(Fim).*~FFT_filter;
-%else
-    FFTimage_filtered = (Fim).*FFT_filter;
-%end
+for ii = 1:n_images
 
-filtered_im = real(ifft2(ifftshift(FFTimage_filtered)));
+    if ndims(Image) == 3
+        im_proc = Image(:,:,ii);
+    else
+        im_proc = Image;
+    end
 
-varargout{1} = filtered_im;
-varargout{2} = Image - filtered_im;
+    % Fourier transform the image
+    Fim = fftshift(fft2(im_proc));
+
+    %filter the FFT-Im using the map
+    % FIX ME: there should be a switch in here for inside or outside the
+    % filter.
+    %if filt_out == 0
+    %    FFTimage_filtered = fftshift(Fim).*~FFT_filter;
+    %else
+        FFTimage_filtered = (Fim).*FFT_filter;
+    %end
+
+    filtered_im = real(ifft2(ifftshift(FFTimage_filtered)));
+    
+    out1(:,:,ii) = filtered_im;
+    out2(:,:,ii) = im_proc - filtered_im;
+end
+
+varargout{1} = out1;
+varargout{2} = out2;

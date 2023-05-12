@@ -1,6 +1,6 @@
 # FoilTrack
 
-This suite of Matlab scripts has been created for analysing displacement of
+This suite of Matlab scripts has been created for analysing displacement of 
 features within X-radiographs from experiments at
 Synchrotron Large Volume press facilities. The scripts track the position
 of selected regions or boxes in the images by finding the
@@ -13,7 +13,7 @@ Although not necessary, the batch processing assumes a file name format along th
 ```
 Expt_Name _ [temp C] _ [load tons] _ [period s] _ [other label] _ sequence_number . ending
 ```
-The data files are processed according to sequence number.
+The data files are processed according to sequence number. 
 
 The suite of scripts has been tested under: Ubuntu 14.04 / Matlab 2014a. Some parts of the
 scripts require some of the Matlab toolboxes. I am not sure which tool boxes I use and where.
@@ -24,6 +24,10 @@ Add the ImageAnalysis folder and all subfolders to the matlab path:
 ```
 addpath(genpath('.../ImageAnalysis'))
 ```
+
+The code requires the 'Image processing' and 'statistics and machine learning' toolbox.
+For spped of processing parts of the script are parallelised and require the 'parallel computing' toolbox.
+All of these toolboxes are the mathworks versions thereof. 
 
 ## Running the Scripts
 There are five parts to the running of the displacement scripts. Documentation

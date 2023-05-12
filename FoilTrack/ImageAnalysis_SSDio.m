@@ -43,6 +43,7 @@ switch proc
                out.boxX       = data.AnalysisInformation.boxes.boxX;
                out.boxY       = data.AnalysisInformation.boxes.boxY;
            end
+           out.refid = data.AnalysisInformation.refid;
            
         elseif isfield(data, 'SSD_array') %old data format. 
             

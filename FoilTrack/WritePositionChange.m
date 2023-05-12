@@ -81,6 +81,16 @@ switch process
             '; search +/-',num2str(to_write.variables.search),...
             '; bright spot removal - ', to_write.variables.spot_removal,...
             '; NaN area outside foil - ', to_write.variables.NaN_bg];
+        if isfield(to_write.variables ,'begin')
+            options_list{3} = [options_list{3},...
+                '; begin - ',num2str(to_write.variables.begin),...
+                '; cease - ',num2str(to_write.variables.cease),...
+                '; window - ',num2str(to_write.variables.window)];
+        end
+        if isfield(to_write.variables ,'surface_coef')
+            options_list{3} = [options_list{3},...
+                '; surface coefficients - [',num2str(to_write.variables.surface_coef(1)), ',',num2str(to_write.variables.surface_coef(2)),']'];
+        end
         
         
         %write first three lines of the header file.
@@ -123,7 +133,7 @@ switch process
             
             fprintf(outfile_handle, '%s, %s', name1, name2);
             for x = 1 : size(to_write.boxes.boxX,1)
-                fprintf(outfile_handle, ', %5.0f', position(x) );
+                fprintf(outfile_handle, ', %8.5f', position(x) );
             end
             fprintf(outfile_handle, ' \n');
         end
@@ -206,7 +216,7 @@ switch process
         num_lines = numel(out_times);
         
         %make the format string the right size for the number of boxes
-        format = ['%s, %s, %5.3f', repmat(', %4.5f',1,num_boxes),' \n'];
+        format = ['%s, %s, %5.3f', repmat(', %4.7f',1,num_boxes),' \n'];
         
         for x = 1 : num_lines
             %N.B. out_ref and out_nos need to be cell arrays inorder to cope with any 
@@ -285,7 +295,7 @@ where = strfind(content, search_string);
 line_content = content(where(2)-200:where(2));
 line_begin = find(line_content == '=');
 line_end = find(line_content == '(');
-disp_call_name = line_content(line_begin+2:line_end(end)-1); %file name of displacement analysis file
+disp_call_name = line_content(line_begin(end)+2:line_end(end)-1); %file name of displacement analysis file
         
 end % CalledFile
 

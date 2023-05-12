@@ -185,10 +185,10 @@ if strcmpi(to_do, 'contents') ~= 1 %i.e. if we are not looking to output an arra
             
 %             DF_image = imread(varargin{iarg+1});
             %assume the dark field image is tif.
-            DF_image = Image_Functions_Tiff('getimage',varargin{iarg+1}, AnalysisVariables.expt_location, 1, 1, image_size);
-            DF_image = im2bw(DF_image,.9);
-            
-            if ~isequal(size(DF_image), image_size) %catch error from FFT which makes the filter. This is due to how the images are read into FFT.
+            DF_image = Im_procs('getimage',varargin{iarg+1}, AnalysisVariables.expt_location, 1, 1, image_size);
+            %DF_image = Image_Functions_Tiff('getimage',varargin{iarg+1}, AnalysisVariables.expt_location, 1, 1, image_size);
+            DF_image = imbinarize(DF_image,.9);
+            if isequal(size(DF_image), image_size) %catch error from FFT which makes the filter. This is due to how the images are read into FFT.
                 if isequal(size(DF_image), fliplr(image_size)) %flip DF_image
                     DF_image = DF_image';
                 else

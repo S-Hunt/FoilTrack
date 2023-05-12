@@ -14,7 +14,7 @@ function varargout = ReadPositionChangeFile(file_name, varargin)
 
 
 def = 'positions';
-pass = {};
+pass = {'warn off'};
 
 % prase varargin...
 iarg = 1;

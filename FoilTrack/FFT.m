@@ -84,10 +84,11 @@ if strcmp(get(hObject,'Visible'),'off')
     imagesc(handles.axes2, Fplot)
     colormap(handles.axes2, 'gray')
     handles.axes2.CLim = [min(Fplot(:)), max(Fplot(:))];
+    
+    handles.editMAX.String = sprintf('%3.2g',max(Fplot(:)));
+    handles.editMin.String = sprintf('%3.2g',min(Fplot(:)));
 end
 
-handles.editMAX.String = sprintf('%3.2g',max(Fplot(:)));
-handles.editMin.String = sprintf('%3.2g',min(Fplot(:)));
 
 handles.filter_state = 0;
 

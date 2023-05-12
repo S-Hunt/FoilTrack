@@ -123,8 +123,8 @@ switch combine_type
     
     % Phases -- values that need to be organised for each case are: phases, phases_err, amps, amp_err and SSD and reference length
     % displcements -- values to be organised are position, SSD? and refernce length.
-    
-    case 'anelastic'
+
+    case {'anelastic', 'deformation'}
         % array to be made needs to be 
         % combine = [ 1 2 3 4 5 ... n-1;
         %             2 3 4 5 6 ... n  ]
@@ -147,7 +147,7 @@ switch combine_type
         % checks that the number of rows is even (1 if even otherwise 0)
         % if the number of rows is not even remove a row of the data.
         even_rows = isequal(num_rows/2,round(num_rows/2));      
-        if even_rows == 0
+        if even_rows == 0 && ~strcmpi(get_rid, 'none')
            switch get_rid
                case 'end'
                    togo = size(box_array,1);
@@ -157,7 +157,7 @@ switch combine_type
                    
                case {'1' '2' '3' '4' '5' '6' '7'}
                    togo = str2num(get_rid);
-                   
+
                otherwise
                    error('The uneven row removal mechanism is not defined')
            end %get_rid 
@@ -227,7 +227,7 @@ switch data_type
         
         foil_change = data1;
         
-        combined_data1 = foil_change(:,combination_array(1,:)) - foil_change(:,combination_array(2,:));
+        combined_data1 = foil_change(:,combination_array(2,:)) - foil_change(:,combination_array(1,:));
         combined_data2 = data2;
      
         

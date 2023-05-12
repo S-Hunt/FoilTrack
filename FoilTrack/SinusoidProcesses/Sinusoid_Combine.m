@@ -105,6 +105,10 @@ if ~isempty(varargin)
         %compute array of phases and amplitudes
         OutAmpArray = sqrt((amp1_array .*cos(phase1_array) + amp2_array.*cos(phase2_array)).^2 + (amp1_array .*sin(phase1_array) + amp2_array.*sin(phase2_array)).^2 );
         OutPhaseArray = atan( (amp1_array.*sin(phase1_array) + amp2_array.*sin(phase2_array)) ./ (amp1_array.*cos(phase1_array) + amp2_array.*cos(phase2_array)) );
+        %catch incorrect error when wrapping around 0 degrees. 
+        %not suite sure why it works
+        OutPhaseArray(OutPhaseArray<=pi/2) = OutPhaseArray(OutPhaseArray<=pi/2)+pi;
+        %end
         if corr_phase == 1
             OutPhaseArray(OutPhaseArray<0) = OutPhaseArray(OutPhaseArray<0) +pi;
         end

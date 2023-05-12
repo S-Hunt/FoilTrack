@@ -65,16 +65,27 @@ sigmas = 2.5; %number of standard deviations to include (if required)
 % goes through one box at a time.
 
 for n = 1 : number_boxes
-
+%     if boxY(n,2) < boxY(n,1)
+%         
+%         [boxY(n,2), boxY(n,1)] = swap(boxY(n,2), boxY(n,1));
+%         disp(["swap", boxY(n,1), boxY(n,2)])
+%     end
     extra_space = search - round(HeightBox(n)/2);
     top_of_area = round(boxY(n,1)) - extra_space;
     bot_of_area = round(boxY(n,2)) + extra_space;
+    
+%     if bot_of_area < top_of_area
+%         
+%         [bot_of_area, top_of_area] = swap(bot_of_area, top_of_area);
+%         disp(["swap", top_of_area, bot_of_area])
+%     end
 
     if ismember(n, empty_boxes) == 1 %is the box empty?
         position_min(n) = mean(boxY(n,:));
         box_range(n) = (boxY(n,2)-boxY(n,1))/2;
         
-    else
+    else       
+        
         %keep search area with in the image. 
         if top_of_area <= 0
             top_of_area = 1;
@@ -82,6 +93,7 @@ for n = 1 : number_boxes
         if bot_of_area >= h1
             bot_of_area = h1;
         end
+
         area = I1(top_of_area : bot_of_area, boxX(n,1):boxX(n,2));
 
         %setup numbers used in switch cases
@@ -208,7 +220,11 @@ for n = 1 : number_boxes
                 coeffs = fminsearch(@fit_gaussian_and_bg,coeffs,[], X, profile);
 
                 position_min(n) = coeffs(4);
-                box_range(n) = abs(coeffs(5));
+                if abs(coeffs(5)) >= 1.5*HeightBox(n)
+                    box_range(n) = 1.5*HeightBox(n);
+                else
+                    box_range(n) = abs(coeffs(5));
+                end
                 coeffs_keep(n,:) = coeffs;
                 box_width_type = 2;
 
@@ -634,6 +650,9 @@ end
 allCases = [casesCells{:}]';
 end
 
+function [b, a] = swap(a, b)
+    % This function has no body!
+end
 
 %Versions
 % v 1.2 4 June 2018

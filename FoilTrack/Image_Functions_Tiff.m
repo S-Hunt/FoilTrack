@@ -58,7 +58,11 @@ switch funct
 
         data = importdata(file_id);
         max_frames = length(data.data);
-
+        
+        if data.textdata{1}(end)==','
+            data.textdata{1}=data.textdata{1}(1:end-1)
+        end
+        
         Im = imread(data.textdata{1});
         [image_size(1) image_size(2) ~] = size(Im);
 
@@ -73,7 +77,7 @@ switch funct
         image_size = varargin{5};
 
         data = importdata(file_id);
-
+       
         Im = zeros([image_size(1) image_size(2) num_frames]);
         %original code
 %         for x = 1 : num_frames
@@ -95,6 +99,9 @@ switch funct
             if isnumeric(data)
                 Im_temp = data;
             else
+                if data.textdata{start+x-1}(end)==','
+                    data.textdata{start+x-1}=data.textdata{start+x-1}(1:end-1);
+                end
                 try
                     Im_temp = imread(data.textdata{start+x-1});
                     % disp('imread')

@@ -131,7 +131,8 @@ data = ImageAnalysis_SSDio('read', file_name, 'pos_array', 'SSD_array', 'image_t
 % extract data and reorient into 'correct' orientation
 pos_array = permute(data.pos_array, [2 3 1]); %pos_array is absolute position values in image
 SSD_array = permute(data.SSD_array, [2 3 1]);
-image_time = data.image_time(:) - data.image_time(1); %make time stamps start from zero
+image_time0 = data.image_time(1);
+image_time = data.image_time(:) - image_time0; %make time stamps start from zero
 
 %get size properties of the data arrays.
 dat_size = size(pos_array);
@@ -241,17 +242,22 @@ for x = 1 : number_boxes
 
     % Assuming that the foils are all about the same shape use the coefficients for the previous foil to fit the next one.
     A = A_all(x,:); 
-    
-    %if required plot data
-    if plots_on == 1
-        surface_plot(image_time, pos_array(:,:,x), SSD_array(:,:,x), model.Fitted, NaN)
-        pause
-    end
-    
+
+%     %if required plot data
+%     if plots_on == 1
+%         surface_plot(image_time, pos_array(:,:,x), SSD_array(:,:,x), model.Fitted, NaN)
+%         pause
+%     end
+    fits(x,:,:) = model.Fitted;
     
     fprintf(del)
 end
 
+%if required plot data
+if plots_on == 1
+    surface_plot2(image_time, pos_array, SSD_array, fits, NaN)
+    pause
+end
 
 %% Refine period.
 %if the preiod is to be solved for refine the output of the fft or input
@@ -494,14 +500,17 @@ end
 
 %if required plot stuff.
 if plots_on == 1
-    for x = 1:number_boxes 
-        surface_plot(image_time, pos_array(:,:,x), SSD_array(:,:,x), fit_temp(x,:), Period)
-        if 1
-            pause
-        else
-            keyboard
-        end
-    end
+    
+    surface_plot2(image_time, pos_array, SSD_array, fit_temp, Period)
+    pause
+%     for x = 1:number_boxes 
+%         surface_plot(image_time, pos_array(:,:,x), SSD_array(:,:,x), fit_temp(x,:), Period)
+%         if 1
+%             pause
+%         else
+%             keyboard
+%         end
+%     end
 end
 
 %% vaidation of the fit (for data validation during debugging)
@@ -616,7 +625,7 @@ if output_save == 1
     WriteSineFit(write_file_name, single_fits,  analysis_vars, 'poly surf', A_all);
     
     %Write mat file with fit properties saved as matricies.
-    save(Fits_file_name, 'A_all', 'A_allError', 'single_fits', 'analysis_vars', 'image_time', 'pos_array', 'SSD_array');
+    save(Fits_file_name, 'A_all', 'A_allError', 'single_fits', 'analysis_vars', 'image_time', 'pos_array', 'SSD_array', 'image_time0');
     
     %     if x == 1
     if ~strcmpi(vars.length_type, 'single')
@@ -735,8 +744,8 @@ toc;
         disp_min = Phases_SineFunc(times, period, amplitude, phase);
 %         disp_min = amplitude .* cos(times./period*2*pi + phase);
 
-%         displacement = displacement + disp_min;
-        displacement = displacement - disp_min;
+        displacement = displacement + disp_min;
+%        displacement = displacement - disp_min;
         %this function is a subtract not an addition because to collapse
         %the positions onto the background one has to remove the
         %contribution of the sine wave. The modified displacements are
@@ -773,6 +782,7 @@ function surface_plot(time, posit, SSDs, fit, per )
 view_ogn = [-68,25];
 
 fg = figure(2);
+
 %set(fg,'Renderer','OpenGL');
 
 %plot data
@@ -868,6 +878,116 @@ ax(3) = subplot(1,3,3);
 
 end
 
+
+function surface_plot2(time, posit, SSDs, fits, per )
+
+view_ogn = [-68,25];
+
+number_foils = size(SSDs,3);
+
+fg = figure(2);
+
+mainfig = figure(2);
+tabgroup = uitabgroup(mainfig, 'Position', [.01 .01 .98 .98]);
+
+for y = 1:number_foils
+    
+    tab(y)=uitab(tabgroup,'Title', sprintf('Foil_%i', y));
+    axes('parent',tab(y))
+                   
+    ax(y,1) = subplot(1,3,1);
+    a = time;
+    b = posit(:,:,y);
+    c = SSDs(:,:,y);
+    scatter3(a(:), b(:),c(:), 4, c(:)), hold off
+    view( view_ogn );
+    shading interp
+    ylabel({'Offset (pixels)'}, 'Rotation', -10)
+    xlabel('Time (s)', 'Rotation', 60)
+    cb(1) = colorbar('horizontal');
+    set(get(cb(1),'ylabel'),'String','Intensity^2');
+    zlabel('SSD (observations, relative to reference image)')
+    title('a. SSD data')
+
+    set(ax(y,1), 'XTickLabelRotation', -10, 'YTickLabelRotation', 0, 'ZTickLabelRotation', -10, 'FontSize', 12)
+    
+%     try
+%         h = rotate3d;
+%         set(h, 'ActionPreCallback', 'set(gcf,''windowbuttonmotionfcn'',@align_axislabel)')
+%         set(h, 'ActionPostCallback', 'set(gcf,''windowbuttonmotionfcn'','''')')
+%         set(gcf, 'ResizeFcn', @align_axislabel)
+%         align_axislabel([], gca)
+%         %axislabel_translation_slider;
+%     end
+
+    %plot model
+    fit = reshape(fits(y,:),size(time));
+
+    ax(y,2) = subplot(1,3,2);
+    surf(time, posit(:,:,y), fit)
+    view( view_ogn );
+    shading interp
+    ylabel({'Offset (pixels)'}, 'Rotation', -10)
+    xlabel('Time (s)', 'Rotation', 60)
+    zlabel('Model SSD')
+    title('b. Model fit to data')
+    cb(2) = colorbar('horizontal');
+    set(get(cb(2),'ylabel'),'String','Intensity^2');
+    set(ax(y,2), 'XTickLabelRotation', -10, 'YTickLabelRotation', 0, 'ZTickLabelRotation', -10, 'FontSize', 12)
+%     try
+%         h = rotate3d;
+%         set(h, 'ActionPreCallback', 'set(gcf,''windowbuttonmotionfcn'',@align_axislabel)')
+%         set(h, 'ActionPostCallback', 'set(gcf,''windowbuttonmotionfcn'','''')')
+%         set(gcf, 'ResizeFcn', @align_axislabel)
+%         align_axislabel([], gca)
+%         %axislabel_translation_slider;
+%     end 
+    
+    %plot Residuals
+    Resids = (SSDs - fit);%./(SSDs);
+    %Resids = (sqrt(SSDs) - sqrt(fit))./sqrt(SSDs);
+    
+    ax(y,3) = subplot(1,3,3);
+    d = time(:);
+    e = posit(:,:,y); e = e(:);
+    f = Resids(:,:,y); f = f(:);
+    if 1;%isfinite(per) == 0
+        %plot residuals as function of time.
+        scatter3(d, e, f, 12, f) %def because has to be plotted as vectors
+        xlabel('Time (s)', 'Rotation', 60)
+    else
+        %plot residuals as function of phase angle.
+        %scatter3(rem(d,per)./(per)*(2*pi), e, f, 12, f) %def because has to be plotted as vectors
+        scatter3(d, e, f, 12, f) %def because has to be plotted as vectors
+        xlabel({'  Phase  ';'(radians)'}, 'Rotation', 60)
+        %xlim([0,2*pi])
+    end
+    view( view_ogn );
+    ylabel({'Offset (pixels)'}, 'Rotation', -10)
+    zlabel('Residuals (SSD - model)')
+    title('c. Residuals')
+    colormap(ax(3),'cool')
+    cb(3) = colorbar('horizontal');
+    set(get(cb(3),'ylabel'),'String','Intensity^2');
+    set(ax(y,3), 'XTickLabelRotation', -10, 'YTickLabelRotation', 0, 'ZTickLabelRotation', -10, 'FontSize', 12)
+%     try
+%         h = rotate3d;
+%         set(h, 'ActionPreCallback', 'set(gcf,''windowbuttonmotionfcn'',@align_axislabel)')
+%         set(h, 'ActionPostCallback', 'set(gcf,''windowbuttonmotionfcn'','''')')
+%         set(gcf, 'ResizeFcn', @align_axislabel)
+%         align_axislabel([], gca)
+%         %axislabel_translation_slider;
+%     end
+    
+%link all the subplots together.
+%FIX ME. for some reason this does not work. Something to so with using both surf and scatter3.
+   %      Link = linkprop(ax, {'CameraUpVector', 'CameraPosition', 'CameraTarget'});
+   %      setappdata(fg, 'StoreTheLink', Link);
+
+%keyboard%pause(.2)
+
+end
+end
 
 function RedChi2 = ReducedChiSquared(obs,model, exclusions)
 %copied from chi2test on mathworks website.

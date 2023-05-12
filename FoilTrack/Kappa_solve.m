@@ -246,13 +246,15 @@ for count = 1 : num_rows
 %         filter(:,size(filter,2)-discard+1:size(filter,2)) = 0;
 
         %discards data with large standard errors
-        too_big = 0.2;
+        too_big = 0.5;
         large = find(phase_err > too_big);
         filter(large) = 0;
     else
-        filter = template;   
+        filter = template;
     end
-
+    if numel(filter) ~= numel(phases)
+        filter = filter(1:size(phases,1),:);
+    end
     % looks for initial r_0 guess if no value is set
     if R_solve == 1 || exist('R__nought','var') == 0
         for i = 1 : number_files

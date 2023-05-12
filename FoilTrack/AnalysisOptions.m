@@ -97,7 +97,7 @@ UI_content(size(UI_content,1)+1,:) = {'disp',  'spot_removal', 'Displacement: Br
 UI_content(size(UI_content,1)+1,:) = {'disp',  'NaN_bg',       'Displacement: Mask background?',   'Replace area not in foil with ''NaN'' (use for poor quality data)',    {'Yes', 'No'},                                  'No',           'red', 1};
 UI_content(size(UI_content,1)+1,:) = {'disp',  'offset',       'Displacement: Whole image movement?',   'Find displacement of areas of interest in whole image first?',    {'Yes', 'No'},                                  'No',           'red', 1};
 
-UI_content(size(UI_content,1)+1,:) = {'phase', 'length_type', 'Length type',        'Calculate the phases from pairs or single foils',                      {'Pair', 'Single', 'Anelastic'},                'Pair',         'green', 1};
+UI_content(size(UI_content,1)+1,:) = {'phase', 'length_type', 'Length type',        'Calculate the phases from pairs or single foils',                      {'Deformation', 'Pair', 'Single', 'Anelastic'},                'Pair',         'green', 1};
 UI_content(size(UI_content,1)+1,:) = {'phase', 'scaling',     'Image scaling',      'Number pixels per micron',                                             {'1', '2', '3', '4', '5', '6'},                 '2',            'green', 3};
 UI_content(size(UI_content,1)+1,:) = {'phase', 'excessive',   'Excessive',          'Ignore points more then n sigma from the fit',                         {'2', '7'},                                     '4',            'orange', 2};
 UI_content(size(UI_content,1)+1,:) = {'phase', 'get_rid',     'Discard',            'In the case of odd numbers of foils select which one to remove',       {'End', 'Middle', '1', '2', '3', '4', '5'},     'Middle',       'red', 1};
