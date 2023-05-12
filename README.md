@@ -45,8 +45,9 @@ created by Jonas Lundgren and released under the permissive license found at Foi
 [Brad Ridder](https://uk.mathworks.com/matlabcentral/fileexchange/17901-propagation-of-uncertainty), and
 [S. Zhang & J. Jin](https://people.sc.fsu.edu/~jburkardt/f77_src/special_functions/special_functions.html)
 as documented within the code.
+* tightfig.m from Chris Verhoek's [tightfig]([https://github.com/rodyo/FEX-getCases](https://www.mathworks.com/matlabcentral/fileexchange/97914-tightfig/).
 
-We are greatful for the efforts of these authors.
+We are greatful for the efforts of these authors. 
 
 
 ## Installation and use
