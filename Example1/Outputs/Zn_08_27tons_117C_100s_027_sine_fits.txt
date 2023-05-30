@@ -1,0 +1,17 @@
+Input file: Zn_08_27tons_117C_100s_027_position_change.txt; modified (proxy for created) - 30-May-2023 15:24:43
+Analysed by: Phases.m; version: 4.3.alpha; modified - 27-May-2023 07:15:07
+Options: length_type = anelastic; get_rid = middle; symm_type = symmetric; bg_type = spline; excessive = 4; err_calc = yes; scaling = 2; search = 5; fixed = 0
+Sine_fit file version: 2.0
+--
+Pair,                     -,              1,         2,         3,  
+Horizontal position,      mm,        0.2380,    0.2380,    0.2380,  
+Period,                   s,        99.7316,   99.7316,   99.7316,  
+Phase,                    rad,       3.5172,    3.4007,    3.0411,  
+Phase error,              rad,       0.0028,    0.0085,    0.0118,  
+Amplitude,                pixels,    0.0536,    0.2182,    0.0680,  
+Amplitude error,          pixels,    0.0008,    0.0025,    0.0039,  
+Reference length,         pixels,  324.7360,  380.1365,  343.6573,  
+Sum Squared Differences,  pix^2,     0.0096,    0.0867,    0.1667,  
+Number data used in fit,  ,              50,        50,        50,  
+Used in period fit?,      ,               1,         1,         1,  
+Chi Squared,              ,          1.1342,    0.3233,    0.3960,  
