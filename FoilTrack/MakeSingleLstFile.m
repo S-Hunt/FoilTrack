@@ -451,7 +451,7 @@ if add_temp == 1
 end
 
 %make Lst filename
-seps = find(target_dir == filesep);
+seps = strfind(target_dir, filesep);
 if seps(end) == length(target_dir)
     file_name = target_dir(seps(end-1)+1:seps(end)-1);
 else

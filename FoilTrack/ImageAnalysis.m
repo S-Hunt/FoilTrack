@@ -241,7 +241,64 @@ switch to_do
         
         %file_id is closed at the end of the switch/case function
 
-    case 'tiffs'
+    case 'export'
+        % extracts all the images from a multi-file format. 
+        % it will also convert the image sequence into tiffs if called. 
+        times_all = [];
+        block_frames = 200;
+        for j = start : block_frames : max_frames
+            
+            if j+block_frames > max_frames
+                block_frames = max_frames - j +1;
+            end
+            
+            Im = Im_procs('getimage',file_id, AnalysisVariables.expt_location, j, block_frames, image_size,'original');
+            im_times = Im_procs('times',file_id, AnalysisVariables.expt_location, j, block_frames, image_size);
+            times_all = [times_all; im_times];
+
+            for k = 1:block_frames
+                %make_tiffs(Im(:, 450:450+260,k),run_name, k+(j-1)*block_frames);
+                make_tiffs(Im(:, :,k),run_name, k+(j-1)*block_frames);
+
+            end
+        end
+        
+        %end time (time the last file in the squence was modified)
+        details = dir(file_name);
+        t0 = datenum(details.date);
+        
+        %file_id is closed at the end of the switch/case function
+        %t0 = datenum(2020,0,1,0,0,0);
+        for i =1 : max_frames
+            %set time
+            format = 'mm/dd/yy HH:MM:SS.FFF';
+            t = (times_all(i) - times_all(1))/24/60/60;
+            times_str = datestr(t0+t, format);
+            %set filename 
+            fnam = make_tiff_names(run_name, i);
+            
+            %change the creation date of the file using bash function !SetFile 
+            % An example of the command is:
+            % !SetFile -d "12/31/2000 23:59:59" Zn_08_27tons_117C_100s_027_image00001.tif
+            exec_str = sprintf("!SetFile -d ""%s"" %s", times_str, fnam);
+            disp(exec_str)
+            eval(exec_str)
+
+            %set the modified and accessed times/dates for the extracted images
+            % An example of the command is:
+            % touch -a -m -d 2022-12-31T11:22:33.5 Zn_08_27tons_117C_100s_027_image00001.tif
+            format = 'yyyymmddHHMM.SS';
+            times_str = datestr(t0+t, format);
+            exec_str = sprintf("!touch -a -m -t %s %s", times_str, fnam);
+            disp(exec_str)
+            eval(exec_str)
+               
+            %keyboard
+                
+        end
+
+       
+    case 'reference tiffs'
         make_tiffs(image1,run_name, ref_id);
         
         %file_id is closed at the end of the switch/case function
@@ -783,14 +840,38 @@ end
 
 %% subfunctions
 
-function make_tiffs(image1,name,ref_id)
+function make_tiffs(image1,name,k)
 
-name = strcat(name,'_image',num2str(ref_id),'_ref.tif');
-image1 = double(image1/max(image1(:)));
+name = make_im_names(name,k, 'tif');
+if 1%max(image1)> 2^8
+    image1 = uint8(image1);
+else
+    image1 = uint16(image1);
+end
+imwrite(image1, name, 'Compression', 'none')
+%asdf = imread(name);
+%imagesc(asdf)
+%keyboard
+end
+
+function make_pngs(image1,name,k)
+
+name = make_im_names(name,k,'png');
+if 1%max(image1)> 2^8
+    image1 = uint8(image1);
+else
+    image1 = uint16(image1);
+end
+
+
 imwrite(image1, name, 'Compression', 'none')
 
 end
 
+
+function out = make_im_names(name,k,ending)
+out = strcat(name,'_image',sprintf("%05i",k),'.',ending);
+end
 
 function out = rotate_images(images, angle)
 %         ims = varargin{1};

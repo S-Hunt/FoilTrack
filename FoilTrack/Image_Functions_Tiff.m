@@ -110,7 +110,10 @@ switch funct
                     % disp('importdata')
                 end
             end
-            
+            if x==1 & size(Im_temp,1) == size(Im,2)
+                clear Im
+                Im = zeros([image_size(2) image_size(1) num_frames]);
+            end
             if isstruct(Im_temp) %catch error incase image type is a bmp
                 Im(:,:,x) = Im_temp.cdata;
             elseif ndims(Im_temp) == 3 %error catch for RGB images
