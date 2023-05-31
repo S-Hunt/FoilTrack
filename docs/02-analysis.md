@@ -1,4 +1,4 @@
-# Analysis Options
+# Setup – Analysis Options
 
 This makes Expt_Name.mat which holds all the options for the data analysis. 
 Running
@@ -44,3 +44,12 @@ Discard |	If there length type is pair and there are an odd number of foils whic
 Symmetry type	|How to combine the foils for the pair length type. Is the bottom foil switched round?
 Background type| 	How to detrend the data before fitting the sinusoid.
 Errors	| Save these or not?
+
+
+
+### Previous step
+[1. Setup the experiment](./02-analysis.md)
+
+### Next step
+[2b. Setup - Parsing the images](./02b-parse.md)
+

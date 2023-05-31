@@ -32,46 +32,18 @@ All of these toolboxes are the mathworks versions thereof.
 ## Running the Scripts
 There are five parts to the running of the displacement scripts. Documentation
 can be found below or by following the links.
+
 1.	[Creation of batch Files](./01-list-files.md)
-2.	[Setup – AnalysisOptions](./02-analysis.md)
-3.	[Parsing the images](./03-parse.md)
-4.	[Selection of the boxes](./04-make-boxes.md)
-5.	Calculating the Displacements (see below)
-6.	Calculate sinusoidal fits (see below)
-7.	Check sinusoidal fits (see below)
+2.	[Setup – AnalysisOptions](./02-analysis.md) and [Setup - Parsing the images](./02b-parse.md)
+3.	[Selection of the boxes](./03-make-boxes.md)
+4.	[Calculating the Displacements](./04-displacements.md)
+5.	[Calculate sinusoidal fits or positions](./05-calculate-phases-positions.md)
+6.	[Display outputs](./06-display-fits.md)
 
 The scripts write all the files to Matlab’s current active directory. It is recommended that a
 new directory is made to contain the analysis files separately from the experimental files.
 
 
-### 5.	Calculate the displacements / SSD values. 
-Either run:
-```
-ImageAnalysis('file name', ‘disp’)
-```
-Or set the switch in manytimes to ‘disp’ and run. The output files are called ‘experiment _position_change.txt’ and ‘experiment_SSD.mat’. 
+## Examples
+Alternatively, exectute [RunExample.m](../Example1/RunExample.m) in Example1 directory. A markdown version of the RunExample.m file is found [here](./Example1Markdown.md)
 
-### 6.	Calculate sinusoidal fits 
-run: 
-```Phases(…)``` or ```PhasesSSD(…)```
-
-### 7.	Check the sinusoidal fits 
-Run: ```PhaseCheck(… options)```
-	SSD_dispalcement_compare(options). 
-
-### 8.	Fit models to data 
-1.	Thermal diffusivity 
-Run: 
-```
-manytimes3
-```
-or
-```
-kappasolve(…)
-```
-2.	Maxwell model for anelasticity
-Run: 
-```
-MaxwellModelPhases('fileglob')
-```
-Where fileglob is the search term for the files to be processed e.g. ‘*sine_fits*’

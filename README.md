@@ -22,7 +22,7 @@ algorithms of Pratt (1991) and Trucco and Verri (1998). The initial implementati
 that approach has been refined in several steps (e.g. Hunt et al. 2011, 2012). A description of the most recent
 enhancments along with details of the approach and history can be found in Hunt et al. (2021). Users of FoilTrack are
 requested to cite Hunt et al. (2021) alongside other relevent publications when describing the use of the software. Further
-details can be found in the CITATION file shipped with the software.
+details can be found in the [CITATION](./CITATION) file shipped with the software.
 
 ## Licence and bundled software
 
@@ -34,6 +34,7 @@ please refer to the [LICENSE](./LICENSE) file distributed with FoilTrack.
 For ease of installation and avoid problems with versioning we distribute a handful of files and toolboxes 
 alongside FoilTrack. These were all released by their authors under the terms of copyleft of permissive licences that
 are compatible with GPLv3. Specifically we distribute the following:
+
 * The [Splinefit toolbox](https://uk.mathworks.com/matlabcentral/fileexchange/71225-splinefit)
 created by Jonas Lundgren and released under the permissive license found at FoilTrack/splinefit/license.txt
 * The esrf-pmedf toolbox created by Petr Mikulik and released under version 2 of the GPL

@@ -1,6 +1,7 @@
-# Make Boxes
+# Select Regions of Interest
 
 Either run:
+
 ```
 ImageAnalysis('file name', ‘boxes’)
 ```
@@ -40,13 +41,16 @@ If the boxes are in the right place press “yes”, then the box positions are 
 Option            |  Description
 ------            | ------
 Yes	              | Finds the pixel row in the box with the minimum intensity.
-Move all X,Y	    | Allows the moving of all the boxes in X and Y. Used if the press was moved between data sets.
+Move all X,Y	    | Allows the moving of all the boxes in X and Y. Used if the relative sample-camera position changes between data sets.
 Move Single Foils	| Allows single foils to be moved manually. 
 Select New Boxes	| Returns the script to the image rotation option and allows the selection of a new set of boxes.  
 Edit 	            | Allows manual editing of the boxes via the command line. 
 No	              | Generates and error and quits the box selection. 
 
-5.	**Move all (X,Y)**
-Text 
-6.	**An option Position single foil**
-Text
+
+
+### Previous step
+[2b. Setup - Parsing the images](./02b-parse.md)
+### Next step
+[4. Calculate displacements](./04-displacements.md)
+
