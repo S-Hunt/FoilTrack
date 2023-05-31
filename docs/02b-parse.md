@@ -12,7 +12,7 @@ Or if batch files are being used set ‘process’ in manytimes to ‘parse’ a
 
 
 ### Previous step
-[2b. Analysis Options](./02b-parse.md)
+[2b. Analysis Options](./02-analysis.md)
 
 ### Next step
 [3. Select Regions of Interest](./03-make-boxes.md)

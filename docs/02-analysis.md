@@ -48,7 +48,7 @@ Errors	| Save these or not?
 
 
 ### Previous step
-[1. Setup the experiment](./02-analysis.md)
+[1. Setup the experiment](./01-list-files.md)
 
 ### Next step
 [2b. Setup - Parsing the images](./02b-parse.md)
