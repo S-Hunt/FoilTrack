@@ -47,7 +47,7 @@ if strcmpi(file_type,'.nc') == 1
     Im_procs = @Image_Functions_NetCDF;
 elseif strcmpi(file_type,'.lst') == 1
     Im_procs = @Image_Functions_Tiff;
-elseif strcmpi(file_type,'.edflist') == 1
+elseif strcmpi(file_type,'.edflist') == 1 | strcmpi(file_type,'.edflst') == 1
     Im_procs = @Image_Functions_EDF;
 elseif strcmpi(file_type,'.nxslst') == 1
     Im_procs = @Image_Functions_NXSlist;
